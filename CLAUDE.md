@@ -53,4 +53,12 @@ src/
 
 ## Configuration
 
-Copy `.env.example` to `.env` and fill in SAP system credentials. If passwords contain `#`, wrap the value in quotes.
+Copy `.env.example` to `.env` and fill in SAP system credentials.
+
+## Gotchas
+
+- **`#` em senhas:** Se a senha SAP contém `#`, envolva o valor entre aspas no `.env` — dotenv trata `#` como comentário caso contrário.
+- **`.env` path:** É carregado relativo a `dist/`, não ao CWD. Se rodar `npm start` de outro diretório, o `.env` precisa estar acessível a partir de `dist/`.
+- **Self-signed TLS aceito por default** (`rejectUnauthorized: false`). Não use este server contra produção sem revisar.
+- **Não existem mocks.** `npm test` requer SAP system live e `.env` válido. Para rodar um único handler: `npm test -- --testNamePattern="<handler-name>"`.
+- **CSRF tokens são cached no axios singleton em `utils.ts`.** Se o backend reciclar a sessão (ex.: logout/login), o cache fica stale — restart o server (`npm run dev`) para forçar refetch.
